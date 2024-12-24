@@ -1,7 +1,7 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
-require('dotenv').config();
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 const app = express();
 app.use(cors());
@@ -23,6 +23,28 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
+    app.get('/api/marathons', async (req, res) => {
+      const queries = req.query;
+      // console.log(queries);
+      const usersCollection = client.db('Medal-Track').collection('marathons');
+      if (queries.size) {
+        const result = await usersCollection
+          .find({})
+          .limit(parseInt(queries.size))
+          .toArray();
+        res.send(result);
+        return;
+      }
+      if (queries.id) {
+        const result = await usersCollection
+          .find({ _id: new ObjectId(queries.id) })
+          .toArray();
+        res.send(result);
+        return;
+      }
+      const result = await usersCollection.find({}).toArray();
+      res.send(result);
+    });
     // Connect the client to the server	(optional starting in v4.7)
     // await client.connect();
     // Send a ping to confirm a successful connection

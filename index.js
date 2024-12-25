@@ -75,6 +75,38 @@ async function run() {
       const result = await usersCollection.deleteOne({ _id: new ObjectId(id) });
       res.send(result);
     });
+    app.post('/api/applications', async (req, res) => {
+      const applications = req.body;
+      const usersCollection = client
+        .db('Medal-Track')
+        .collection('applications');
+      const result = await usersCollection.insertOne(applications);
+      res.send(result);
+    });
+    app.get('/api/applications', async (req, res) => {
+      const queries = req.query;
+      // console.log(queries);
+      const usersCollection = client
+        .db('Medal-Track')
+        .collection('applications');
+
+      if (queries.id) {
+        const result = await usersCollection
+          .find({ _id: new ObjectId(queries.id) })
+          .toArray();
+        res.send(result);
+        return;
+      }
+      if (queries.email) {
+        const result = await usersCollection
+          .find({ user_email: queries.email })
+          .toArray();
+        res.send(result);
+        return;
+      }
+      const result = await usersCollection.find({}).toArray();
+      res.send(result);
+    });
     // Connect the client to the server	(optional starting in v4.7)
     // await client.connect();
     // Send a ping to confirm a successful connection

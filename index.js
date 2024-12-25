@@ -59,6 +59,16 @@ async function run() {
       const result = await usersCollection.insertOne(marathons);
       res.send(result);
     });
+    app.patch('/api/marathons/:id', async (req, res) => {
+      const id = req.params.id;
+      const marathons = req.body;
+      const usersCollection = client.db('Medal-Track').collection('marathons');
+      const result = await usersCollection.updateOne(
+        { _id: new ObjectId(id) },
+        { $set: marathons }
+      );
+      res.send(result);
+    });
     // Connect the client to the server	(optional starting in v4.7)
     // await client.connect();
     // Send a ping to confirm a successful connection

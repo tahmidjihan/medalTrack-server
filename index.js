@@ -45,6 +45,12 @@ async function run() {
       const result = await usersCollection.find({}).toArray();
       res.send(result);
     });
+    app.post('/api/marathons', async (req, res) => {
+      const marathons = req.body;
+      const usersCollection = client.db('Medal-Track').collection('marathons');
+      const result = await usersCollection.insertOne(marathons);
+      res.send(result);
+    });
     // Connect the client to the server	(optional starting in v4.7)
     // await client.connect();
     // Send a ping to confirm a successful connection

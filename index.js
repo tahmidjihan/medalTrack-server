@@ -42,6 +42,14 @@ async function run() {
         res.send(result);
         return;
       }
+      if (queries.email) {
+        const result = await usersCollection
+          .find({ created_by: queries.email })
+          .toArray();
+        res.send(result);
+        return;
+      }
+
       const result = await usersCollection.find({}).toArray();
       res.send(result);
     });

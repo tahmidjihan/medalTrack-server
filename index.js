@@ -69,6 +69,12 @@ async function run() {
       );
       res.send(result);
     });
+    app.delete('/api/marathons/:id', async (req, res) => {
+      const id = req.params.id;
+      const usersCollection = client.db('Medal-Track').collection('marathons');
+      const result = await usersCollection.deleteOne({ _id: new ObjectId(id) });
+      res.send(result);
+    });
     // Connect the client to the server	(optional starting in v4.7)
     // await client.connect();
     // Send a ping to confirm a successful connection

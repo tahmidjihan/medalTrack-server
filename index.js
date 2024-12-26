@@ -49,6 +49,15 @@ async function run() {
         res.send(result);
         return;
       }
+      if (queries.sort) {
+        const result = await usersCollection
+          .find({})
+          .sort({ [queries.sort]: -1 })
+          .toArray();
+        res.send(result);
+        return;
+      }
+      console.log(req.query);
 
       const result = await usersCollection.find({}).toArray();
       res.send(result);
@@ -90,6 +99,18 @@ async function run() {
         .db('Medal-Track')
         .collection('applications');
 
+      if (queries.email && queries.search) {
+        const result = await usersCollection
+          .find({
+            $and: [
+              { user_email: queries.email },
+              { marathon_title: { $regex: queries.search, $options: 'i' } },
+            ],
+          })
+          .toArray();
+        res.send(result);
+        return;
+      }
       if (queries.id) {
         const result = await usersCollection
           .find({ _id: new ObjectId(queries.id) })
